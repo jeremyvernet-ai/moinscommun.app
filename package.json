@@ -1,0 +1,20 @@
+{
+  "name": "moins-commun-codemagic",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Moins Commun app for Codemagic + Capacitor",
+  "scripts": {
+    "build": "node build-web.mjs",
+    "cap:sync:android": "npx cap sync android",
+    "cap:sync:ios": "npx cap sync ios"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0",
+    "typescript": "^5.0.0"
+  }
+}

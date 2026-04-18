@@ -1,0 +1,60 @@
+workflows:
+  android-release:
+    name: Moins Commun Android Release
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    environment:
+      node: latest
+      vars:
+        PACKAGE_NAME: "com.moinscommun.app"
+    scripts:
+      - name: Install dependencies
+        script: npm install
+      - name: Build web assets
+        script: npm run build
+      - name: Add Android platform if missing
+        script: |
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+      - name: Sync Capacitor Android
+        script: npx cap sync android
+      - name: Set up local.properties
+        script: echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Build Android AAB
+        script: |
+          cd android
+          ./gradlew bundleRelease
+    artifacts:
+      - android/app/build/outputs/**/*.aab
+      - android/app/build/outputs/**/mapping.txt
+
+  ios-release:
+    name: Moins Commun iOS Release
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+      cocoapods: default
+      node: latest
+    scripts:
+      - name: Install dependencies
+        script: npm install
+      - name: Build web assets
+        script: npm run build
+      - name: Add iOS platform if missing
+        script: |
+          if [ ! -d "ios" ]; then
+            npx cap add ios
+          fi
+      - name: Sync Capacitor iOS
+        script: npx cap sync ios
+      - name: Install CocoaPods dependencies
+        script: |
+          cd ios/App
+          pod install
+      - name: Placeholder
+        script: echo "Configure ensuite la signature Apple dans Codemagic pour produire un IPA."
+    artifacts:
+      - ios/App/**/*.xcworkspace
+      - ios/App/**/*.xcodeproj
